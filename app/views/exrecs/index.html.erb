@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-sm">
+    <%= link_to 'New Purchase', new_person_path, :class => "btn btn-outline-success btn-lg btn-block" %>
+  </div>
+  <div class="col-sm">
+    <%= link_to 'Sample Invoice', new_exrec_path, :class => "btn btn-outline-danger btn-lg btn-block"  %>
+  </div>
+  <div class="col-sm">
+    <%= link_to 'New Layway Purchase', new_layrec_path, :class => "btn btn-outline-warning btn-lg btn-block"  %>
+  </div>
+  <div class="col-sm">
+    <%= link_to 'All Layaway Invoices', layrecs_path, :class => "btn btn-outline-info btn-lg btn-block" %>
+  </div>
+</div><br>
+<%= link_to 'New Sample Invoice', new_exrec_path, :class => "btn btn-outline-danger btn-lg btn-block" %><br>
+
+<button type="button" class="btn btn-primary btn-lg btn-block">All Sample Invoices </button><br>
+<center>
+  <table id="exinv" class="table table-striped table-bordered" style="width: 1000px;" >
+  <thead class='table-dark'>
+    <tr>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <% if current_user  && current_user.admin? %>
+        <th>Action</th>
+        <th>Action</th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @exrecs.each do |exrec| %>
+      <tr>
+        <td><%= link_to exrec.name, exrec %></td>
+        <td><%= exrec.phone %></td>
+        <td><%= exrec.email %></td>
+        <% if current_user  && current_user.admin? %>
+          <td><%= link_to 'Edit', edit_exrec_path(exrec) %></td>
+          <td><%= link_to 'Destroy', exrec, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</center>
+
+<br>

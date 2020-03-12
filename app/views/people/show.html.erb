@@ -1,0 +1,24 @@
+<%= link_to "print Recipt (PDF)", person_path(@person, format: 'pdf'), class:"btn btn-outline-success" %><br><br>
+<% if @person.finance == true %>
+  <div class="container" style="width: 93%">
+    <button type="button" class="btn btn-success btn-lg btn-block">Finance Purchase</button>
+  </div>
+<% else %>
+  <div class="container" style="width: 93%">
+    <button type="button" class="btn btn-danger btn-lg btn-block">Reguler Purchase</button>
+  </div>
+<% end %>
+<div class="container" style= 'background-color: #F0FFFF'><br>
+  <% if @person.tax_inc == true && @person.finance == true %>
+    <%= render 'fin_tax' %>
+  <% elsif  @person.finance == true %>
+    <%= render 'finance' %>
+  <% else %>
+    <%= render 'regular' %>
+  <% end %>
+  <br>
+  <% if current_user  && current_user.admin? %>
+    <%= link_to 'Edit Customer Information Only!', edit_person_path(@person), :class => "btn btn-danger"  %>
+  <% end %>
+  <%= link_to 'Back to All Invoices!', people_path, :class => "btn btn-outline-success" %>
+</div>

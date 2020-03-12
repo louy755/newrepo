@@ -1,0 +1,44 @@
+<%= form_with(model: exrec, local: true) do |form| %>
+  <% if exrec.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(exrec.errors.count, "error") %> prohibited this exrec from being saved:</h2>
+
+      <ul>
+        <% exrec.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="container" style="background-color: #cceeff;" ><br><br>
+  <div class="row">
+    <div class="col-sm">
+      <div class="field">
+        <%= form.label :name %>
+        <%= form.text_field :name %>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="field">
+        <%= form.label :phone %>
+        <%= form.text_field :phone %>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="field">
+        <%= form.label :email %>
+        <%= form.text_field :email %>
+      </div>
+    </div>
+  </div><br>
+  <button type="button" class="btn btn-primary btn-lg btn-block">
+    Check This box to Include TAX!<%= form.check_box :tax_inc %>
+  </button>
+
+</div><br>
+<div class="actions">
+  <button class="btn btn-info btn-lg btn-block" type="submit"><h2>Proceed to Step #2 to Add Sales Details! </h2></button>
+</div>
+<br>
+<% end %>

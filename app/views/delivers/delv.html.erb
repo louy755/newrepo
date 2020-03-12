@@ -1,0 +1,43 @@
+<button type="button" class="btn btn-success btn-lg btn-block">Daily delivery Count</button><br>
+<%= line_chart Deliver.group_by_day(:delivery_date).count %><br>
+
+<hr>
+<button type="button" class="btn btn-success btn-lg btn-block">Day of Current week delivery Count</button><br>
+<%= column_chart Deliver.group_by_day_of_week(:delivery_date, format: "%a").count %>
+<hr>
+<button type="button" class="btn btn-info btn-lg btn-block">
+  <h3>All Deliveries!</h3>
+</button><br>
+<button type="button" class="btn btn-dark btn-lg btn-block">
+  <font size="4" color="red"><h3>All Delivery fees:&nbsp;&nbsp;
+    <%= number_to_currency delivery_fee %></h3>
+  </font>
+</button><br>
+<center>
+  <table id="delv" class="table table-striped table-bordered" style="width: 1000px;">
+    <thead class='table-dark'>
+      <tr>
+        <th>QNTY</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Date</th>
+        <th>fee</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @delivers.each do |delv| %>
+        <tr>
+          <td><%= delv.id %></td>
+          <td><%= delv.person.name %></td>
+          <td><%= delv.person.phone %></td>
+          <td><%= delv.person.address.titleize %>&nbsp;<%= delv.person.address2%>&nbsp;<%= delv.person.city.titleize%>&nbsp;<%= delv.person.zip%> </td>
+          <td><%= delv.delivery_date %></td>
+          <td><%= number_to_currency delv.delivery %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table><hr><br>
+</center>

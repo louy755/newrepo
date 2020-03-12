@@ -1,0 +1,51 @@
+<%= link_to "print Recipt (PDF)", layrec_path(@layrec, format: 'pdf'), class:"btn btn-outline-success" %><br><br>
+<div class="container" style="width: 93%">
+  <button type="button" class="btn btn-warning btn-lg btn-block">
+    Layway Purchase
+  </button>
+</div>
+<div class="container" style= 'background-color: #F0FFFF'><br>
+<center>
+  <% if current_user  && current_user.admin? %>
+    <div class='container'>
+      <table class='table table-hover table-striped'>
+        <thead class='table-dark'>
+          <tr>
+            <th>Total Invoce</th>
+            <th>Sub Total</th>
+            <th>Tax</th>
+            <th><center>Total Payments</center></th>
+            <th>Remaining</th>
+            <th>Cost</th>
+            <th>Profit</th>
+            <th>Margin</th>
+          </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+              <td><%= number_to_currency @layrec.total %></td>
+              <td><%= number_to_currency @layrec.sub_total %></td>
+              <td><%= number_to_currency @layrec.tax %></td>
+              <td><center><font size="4" color="green"><%= number_to_currency lay_tot_pay %></font></center></td>
+              <% if  @layrec.tax_inc == true %>
+                <font color="red"><td><font size="4" color="red"><%= number_to_currency lay_tot_reg %></font></td></font>
+              <% else %>
+                <td><font size="5" color="red"><%= number_to_currency lay_tot  %></font></td>
+              <% end %>
+              <td><%= number_to_currency @layrec.cost %></td>
+              <td><%= number_to_currency @layrec.profit  %></td>
+              <td><%= ( @layrec.profit / @layrec.sub_total * 100).round(2) %> %</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+  <% end %>
+</center>
+  <%= render 'reglay' %>
+  <br>
+  <% if current_user  && current_user.admin? %>
+    <%= link_to 'Edit Customer Information Only!', edit_layrec_path(@layrec), :class => "btn btn-danger"  %>
+  <% end %>
+  <%= link_to 'Back to All Layway Invoices!', layrecs_path, :class => "btn btn-outline-success" %><br><br>
+</div>

@@ -1,0 +1,73 @@
+<button type="button" class="btn btn-warning btn-lg btn-block">Layway Payments Details! </button>
+<div class="container" style= 'background-color: #F0FFFF'>
+  <center>
+    <table id="laymore" class="table table-striped table-bordered" style="width: 1000px;">
+      <thead class='bg-info'>
+        <tr>
+          <th>SER</th>
+          <th>Method</th>
+          <th>Amount</th>
+          <th>Sale Rep</th>
+          <th>Date</th>
+          <th>Customer Phone</th>
+          <th>Invoice Due</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% laytot = 0 %>
+        <% laytot_inv = 0 %>
+        <% total_remaining = 0 %>
+        <% Paylay.all.each do |pay| %>
+        <% laytot += pay.amount%>
+        <tr>
+          <td><%= pay.id %></td>
+          <td><%= pay.method %></td>
+          <td><font size="3" color="green"><%= number_to_currency pay.amount %></font></td>
+          <td><%= pay.sale_rep%></td>
+          <td><%= pay.created_at.strftime("%d %b %Y %l:%M %p")  %></td>
+          <td><%= pay.layrec.phone %></td>
+          <td><font size="4" color="blue"><%= number_to_currency pay.layrec.total %></font></td>
+          <% @rem = (pay.layrec.total - pay.amount) %>
+          <% laytot_inv += pay.layrec.total %>
+          <% total_remaining += @rem %>
+          <% end %>
+        </tr>
+      </tbody>
+    </table>
+  </center><br>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <button type="button" class="btn btn-primary btn-lg btn-block">Total Invoices: <%= number_to_currency laytot_inv %></button>
+      </div>
+      <div class="col-sm">
+        <button type="button" class="btn btn-success btn-lg btn-block">Total Payments: <%= number_to_currency laytot %></button>
+      </div>
+      <div class="col-sm">
+        <button type="button" class="btn btn-outline-danger btn-lg btn-block"><font size="4" color="black">Remaining: <%= number_to_currency total_remaining %> Remaining </font></button>
+
+      </div>
+    </div>
+  </div><br>
+</div><br>
+<button type="button" class="btn btn-primary btn-lg btn-block">Daily Sales Count</button><br>
+<%= line_chart Layrec.group_by_day(:created_at).count %><br>
+<hr>
+<button type="button" class="btn btn-primary btn-lg btn-block">Daily Items sales Count</button><br>
+<%= line_chart Goodlay.group(:item).group_by_day(:created_at).count %><br>
+<div class="container" style= 'background-color: #e6f7ff'>
+  <div class="row">
+    <div class="col"><br>
+      <button type="button" class="btn btn-primary btn-lg btn-block">Sales Rep</button><br>
+      <center>
+        <%= pie_chart Layrec.group(:sale_rep).count, legend: "bottom", width: "400px", height: "400px" %>
+      </center>
+    </div>
+    <div class="col"><br>
+      <button type="button" class="btn btn-primary btn-lg btn-block">Sales Item by Vendor</button><br>
+      <center>
+        <%= pie_chart Goodlay.group(:vendor).count,  width: "400px", height: "400px" %>
+      </center>
+    </div>
+  </div><br>
+</div><br><br>

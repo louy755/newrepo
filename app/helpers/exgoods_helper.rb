@@ -1,0 +1,2 @@
+module ExgoodsHelper
+end

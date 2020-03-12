@@ -1,0 +1,40 @@
+<%= link_to "print Sample Recipt (PDF)", exrec_path(@exrec, format: 'pdf'), class:"btn btn-outline-success" %><br><br>
+<button type="button" class="btn btn-secondary btn-lg btn-block">Sample Invoice</button>
+<div class="container" style= 'background-color: #F0FFFF'><br>
+  <div class="container"><br>
+    <div class="row">
+      <div class="col-sm">
+        <p>
+          <font size="4" color="black">
+            <strong>Name:</strong>
+            <%= @exrec.name.titleize %>
+          </font>
+        </p>
+      </div>
+      <div class="col-sm">
+        <p>
+          <font size="4" color="black">
+            <strong>Phone:</strong>
+            <%= @exrec.phone %>
+          </font>
+        </p>
+      </div>
+      <div class="col-sm">
+        <p>
+          <font size="4" color="black">
+            <strong>Email:</strong>
+            <%= @exrec.email %>
+          </font>
+        </p>
+      </div>
+    </div>
+  </div><br>
+
+  <%= render 'sample' %>
+</div><br>
+
+<% if current_user  && current_user.admin? %>
+  <%= link_to 'Edit Customer Information Only!', edit_exrec_path(@exrec), :class => "btn btn-danger"  %>
+<% end %>
+<%= link_to 'Back to All Invoices!', people_path, :class => "btn btn-outline-success"  %>
+</div>

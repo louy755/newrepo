@@ -1,0 +1,308 @@
+<button type="button" class="btn btn-dark btn-lg btn-block">
+  <strong>Customer Name:</strong>
+  <%= (@layrec.name).titleize %>
+  &nbsp;&nbsp; &nbsp;&nbsp;
+  <strong>Customer Phone:</strong>
+  <%= @layrec.phone %>&nbsp;&nbsp;
+  <font size="5" color="red">
+    <% if  @layrec.tax_inc == true %>
+      <font color="red"><%= number_to_currency lay_tot_reg  %></font>
+    <% else %>
+      <font color="red"><%= number_to_currency lay_tot  %></font>
+    <% end %>
+    &nbsp;&nbsp; Invoice Remaining
+  </font>
+</button>
+
+<div class="container" style= 'background-color: AliceBlue' ><br>
+  <div class="row">
+    <div class="col-sm">
+      <p>
+        <strong>Name:</strong>
+        <%= @layrec.name.capitalize %>
+      </p>
+
+      <p>
+        <strong>Phone:</strong>
+        <%= @layrec.phone %>
+      </p>
+
+      <p>
+        <strong>Email:</strong>
+        <%= @layrec.email %>
+      </p>
+      <p>
+        <strong>Invoice number:</strong>
+        <%= @layrec.phone %>
+      </p>
+    </div>
+    <div class="col-sm">
+      <p>
+        <strong>Address:</strong>
+        <%= @layrec.address.capitalize %>
+      </p>
+
+      <p>
+        <strong>Address2:</strong>
+        <%= @layrec.address2.capitalize %>
+      </p>
+
+      <p>
+        <strong>City:</strong>
+        <%= @layrec.city.capitalize %>
+      </p>
+
+    </div>
+    <div class="col-sm">
+      <p>
+        <strong>State:</strong>
+        <%= @layrec.state.capitalize %>
+      </p>
+
+      <p>
+        <strong>Zip:</strong>
+        <%= @layrec.zip %>
+      </p>
+      <p>
+        <strong>Date and Time:</strong>
+        <%= @layrec.created_at.strftime("%A, %d %b %Y ") %>
+      </p>
+
+    </div>
+  </div>
+
+  <div class="container" >
+    <center>
+      <div class="container" style="width: 93%">
+        <button type="button" class="btn btn-warning btn-lg btn-block">Purchase Details!</button>
+      </div>
+      <table class='table table-hover table-striped' style="width: 90%;">
+          <thead class='table-dark'>
+            <tr>
+              <th>QNTY</th>
+              <th>Item</th>
+              <th>Price</th>
+              <th>Description</th>
+              <th>Subtotal</th>
+              <% if @layrec.tax_inc == true %>
+                <th>Tax</th>
+              <% end %>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <%  %>
+            <% @layrec.goodlays.each do |itm| %>
+              <tr>
+                <td><%= itm.qny %></td>
+                <td><%= number_to_currency itm.price %></td>
+                <td><%= itm.item %></td>
+                <td><%= itm.discription %></td>
+                <% sub_totl = itm.price * itm.qny %>
+                <td><%= number_to_currency sub_totl %></td>
+                <% if @layrec.tax_inc == true %>
+                  <% tax_itm = itm.price * itm.qny * 10.25 / 100%>
+                  <td><%= number_to_currency tax_itm %></td>
+                  <% else %>
+                <% end %>
+                <td><%= link_to (image_tag('delx.png',  height: '40px', width: '40px')), [@layrec, itm], method: :delete, data: { confirm: 'You are about delete this item!' } %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table><hr><br>
+
+        <button type="button" class="btn btn-success btn-lg btn-block">Payments Details History</button>
+        <table class='table table-hover table-striped'>
+            <thead class='table-dark'>
+              <tr>
+                <th>SER</th>
+                <th>Pyment Method</th>
+                <th>Amount</th>
+                <th>Sale Rep</th>
+                <th>Date</th>
+                <% if current_user  && current_user.admin? %>
+                  <th>Action</th>
+                <% end %>
+              </tr>
+            </thead>
+
+            <tbody>
+              <%  %>
+              <% (@layrec.paylays).each_with_index do |pay, index| %>
+                <tr>
+                  <td><%= index = index + 1 %></td>
+                  <td><font size="4" color="green">&nbsp;&nbsp;<%= pay.method %></font></td>
+                  <td><%= number_to_currency pay.amount %></td>
+                  <td><%= pay.sale_rep %></td>
+                  <td><%=  pay.created_at.strftime("%A, %d %b %Y %l:%M %p") %></td>
+                  <% if current_user  && current_user.admin? %>
+                    <td><%= link_to (image_tag('delx.png',  height: '40px', width: '40px')), [@layrec, pay], method: :delete, data: { confirm: 'You are about delete this item!' } %></td>
+                  <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <font size="6" color="green"><%= number_to_currency lay_tot_pay %> Total Payments</font>
+
+          <hr>
+      </center>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <div class="col-sm">
+            <button type="button" class="btn btn-success btn-lg btn-block">Delivery Details</button><br>
+            <% @layrec.deliverlays.each do |delv| %>
+              Delivert Fee: <%= delv.delivery %><br>
+              Fee: <%= delv.fee %><br>
+              Discount: <%= delv.discount %><br>
+              <td><%= link_to (image_tag('delx.png',  height: '40px', width: '40px')), [@layrec, delv], method: :delete, data: { confirm: 'You are about delete this item!' } %></td>
+              <hr>
+            <% end %>
+          </div>
+
+        </div>
+        <div class="col-sm">
+          <font size="4" color="red"><%= number_to_currency lay_sub_totls %> Items Subtotal</font><br>
+          <% if @layrec.tax_inc == true %>
+            <font size="4" color="red"><%= number_to_currency lay_tax_calc %> Invoice TAX</font><br>
+          <% end %>
+          <font size="4" color="red"><%= number_to_currency lay_inv_delivery %> Delivery Fee</font><br>
+          <font size="4" color="red"><%= number_to_currency lay_inv_fee   %> Fee If Apply  -</font><br>
+          <font size="4" color="blue"><%= number_to_currency lay_inv_dicount  %> Discount If Apply</font><br>
+          <hr>
+          <% if @layrec.tax_inc == true %>
+          <font size="5" color="blue"><%= number_to_currency lay_total_reg %> Invoice Due!</font><br>
+          <% else %>
+            <font size="5" color="blue"><%= number_to_currency lay_totall %> Invoice Due!</font><br>
+          <% end %>
+          <font size="5" color="green"><%= number_to_currency lay_tot_pay %> Total Payments</font><br>
+          <hr>
+          <center>
+            <% if lay_tot_reg < 0 %>
+              <%= image_tag('x.gif',  height: '90px', width: '90px') %>
+              <font size="5" color="red">
+              <button type="button" class="btn btn-danger btn-lg btn-block">
+                <h4><%= number_to_currency lay_tot_reg %></h4>
+              </button>
+                 Please Corret this Invoice Remaining</font>
+            <% elsif  @layrec.tax_inc == true %>
+              <font size="6" color="red"><%= number_to_currency lay_tot_reg  %><br> Invoice Remaining</font>
+            <% else %>
+              <font size="6" color="red"><%= number_to_currency lay_tot  %><br> Invoice Remaining</font>
+            <% end %>
+          </center>
+
+        </div>
+      </div>
+    </div><br>
+
+
+    <a href="#" id="show_layitems">
+      <button type="button" class="btn btn-info btn-lg btn-block"><h3>1- Click to Add Items Details!</h3></button><br>
+    </a>
+    <div id="layitems" class="hidden">
+      <div class="container" style= 'background-color: #F0FFFF'>
+        <%= form_for [@layrec, @layrec.goodlays.build] do |f| %>
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <%= f.label :qny %><br>
+                <%= f.select :qny, [0,1,2,3,4,5,6,7,8,9,10,11,12] %>
+              </div>
+              <div class="col-sm">
+              <%= f.label :item %>
+                <%= f.text_field :item %>
+              </div>
+              <div class="col-sm">
+                <%= f.label :discription %>
+                <%= f.text_field :discription %>
+              </div>
+              <div class="col-sm">
+                <%= f.label :price %>
+                <%= f.text_field :price %>
+              </div>
+              <div class="col-sm">
+              <%= f.label :vendor %><br>
+                <%= f.text_field :vendor %>
+              </div>
+            </div>
+
+              <div class="col-sm"><br>
+                <div class="actions">
+                  <button class="btn btn-success btn-lg btn-block " type="submit"><h3> Click here to ADD New Item!</h3></button>
+                </div><br>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div><br>
+
+    <a href="#" id="show_laydelivery">
+      <button type="button" class="btn btn-info btn-lg btn-block"><h3>2- Click to Add Delivery Details!</h3></button>
+    </a><br>
+    <div id="laydelivery" class="hidden">
+      <div class="container" style= 'background-color: #F0FFFF'><br>
+        <%= form_for [@layrec, @layrec.deliverlays.build] do |f| %>
+          <div class="row">
+            <div class="col">
+              <div class="col-sm"><br>
+                Delivery Fee: <%= f.text_field :delivery %>
+              </div>
+            </div>
+            <div class="col">
+              <div class="col-sm"><br>
+                Fee If Apply: <%= f.text_field :fee%>
+              </div>
+            </div>
+            <div class="col">
+              <div class="col-sm">
+                Discount If Apply: <%= f.text_field :discount %>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm"><br>
+            <div class="actions">
+              <button class="btn btn-success btn-lg btn-block " type="submit"><h3>Click here to ADD Delivery  Details and Discount if Apply!</h3></button>
+            </div><br>
+          </div>
+        <% end %>
+      </div><br>
+    </div><br><br>
+
+    <a href="#" id="show_laypays">
+      <button type="button" class="btn btn-danger btn-lg btn-block"><h2>3- Click to Add Payment Details!</h2></button><br>
+    </a>
+    <div id="laypays" class="hidden">
+      <div class="container" style= 'background-color: #F0FFFF'><br>
+        <%= form_for [@layrec, @layrec.paylays.build] do |f| %>
+          <div class="row">
+            <div class="col">
+              <div class="col-sm"><br>
+                Amount: <%= f.text_field :amount%>
+              </div>
+            </div>
+            <div class="col">
+              <div class="col-sm">
+
+                Method: <%= f.select :method, [ 'SELECT PAYMENT METHOD','Credit', 'Debit', 'Check', ['Cash']] %>
+              </div>
+            </div>
+            <div class="col">
+              <div class="col-sm"><br>
+              Sale Rep:  <%= f.select :sale_rep,[current_user.username] %>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm"><br>
+            <div class="actions">
+              <button class="btn btn-success btn-lg btn-block " type="submit"><h3> Click here to ADD Payment!</h3></button>
+            </div><br>
+          </div>
+        <% end %>
+      </div><br>
+    </div><br>
+    </div><br>
+  </div>
+</div>

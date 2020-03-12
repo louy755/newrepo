@@ -1,0 +1,55 @@
+<%= render 'tables' %>
+
+<button type="button" class="btn btn-primary btn-lg btn-block">Daily Sales Count</button><br>
+<%= line_chart Person.group_by_day(:created_at).count %><br>
+<hr>
+<button type="button" class="btn btn-primary btn-lg btn-block">Daily Items sales Count</button><br>
+<%= line_chart Good.group(:item).group_by_day(:created_at).count %><br>
+<hr>
+<button type="button" class="btn btn-primary btn-lg btn-block">Daily Sales Count</button><br>
+<%= column_chart Person.group_by_day(:created_at).count  %><br>
+<hr>
+<button type="button" class="btn btn-primary btn-lg btn-block">Monthly Sales Count</button><br>
+<%= column_chart Person.group_by_month(:created_at).count  %>
+<hr>
+
+<div class="container" style= 'background-color: #e6f7ff'>
+  <div class="row">
+    <div class="col"><br>
+      <button type="button" class="btn btn-primary btn-lg btn-block">Sales Rep</button><br>
+      <center>
+        <%= pie_chart Person.group(:slae_rep).count, legend: "bottom", width: "400px", height: "400px" %>
+      </center>
+    </div>
+    <div class="col"><br>
+      <button type="button" class="btn btn-primary btn-lg btn-block">Sales Item by Vendor</button><br>
+      <center>
+        <%= pie_chart Good.group(:vendor).count,  width: "400px", height: "400px" %>
+      </center>
+    </div>
+  </div><br>
+</div><br><br>
+<hr>
+<div class="container" style= 'background-color: #F0FFFF'>
+  <button type="button" class="btn btn-primary btn-lg btn-block">Most Items sales Count</button><br>
+  <center><%= pie_chart Good.group(:item).count, legend: "bottom", width: "500px", height: "500px" %></center>
+</div><br>
+<hr>
+<br>
+<div class="container" style= 'background-color: #F0FFFF'>
+  <button type="button" class="btn btn-primary btn-lg btn-block">Total sales Payments Details!</button><br>
+  <center>
+    <%= pie_chart Person.group(:finance).count, legend: false, colors: ["#e63900", "#00cc44"] %><br>
+
+    <button type="button" class="btn btn-success">
+      Finance Sales <span class="badge badge-light"><%= Person.where(finance: true).count %></span>
+    </button> +
+    <button type="button" class="btn btn-danger">
+      Regailer sale <span class="badge badge-light"><%= Person.where(finance: false).count %></span>
+    </button> =
+    <button type="button" class="btn btn-warning">
+      Total Sales <span class="badge badge-light"><%= Person.all.count %></span>
+    </button>
+  </center><br>
+</div><br>
+<hr>

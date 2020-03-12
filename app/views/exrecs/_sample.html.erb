@@ -1,0 +1,146 @@
+<center>
+  <div class="container" style="width: 93%">
+    <button type="button" class="btn btn-warning btn-lg btn-block">Estmate Details!</button>
+  </div>
+  <table class='table table-hover table-striped' style="width: 90%;">
+      <thead class='table-dark'>
+        <tr>
+          <th>QNTY</th>
+          <th>Item</th>
+          <th>Price</th>
+          <th>Description</th>
+          <th>Subtotal</th>
+          <% if @exrec.tax_inc == true %>
+            <th>Tax</th>
+          <% end %>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <%  %>
+        <% @exrec.exgoods.each do |itm| %>
+          <tr>
+            <td><%= itm.qny %></td>
+            <td><%= number_to_currency itm.price %></td>
+            <td><%= itm.item %></td>
+            <td><%= itm.description %></td>
+            <% sub_totl = itm.price * itm.qny %>
+            <td><%= number_to_currency sub_totl %></td>
+            <% if @exrec.tax_inc == true %>
+              <% tax_itm = itm.price * itm.qny * 10.25 / 100%>
+              <td><%= number_to_currency tax_itm %></td>
+            <% end %>
+            <% if @exrec.tax_inc == true %>
+              <td><%= number_to_currency sub_totl + tax_itm  %></td>
+            <% else %>
+              <td><%= number_to_currency sub_totl %></td>
+            <% end %>
+            <td><%= link_to (image_tag('delx.png',  height: '40px', width: '40px')), [@exrec, itm], method: :delete, data: { confirm: 'You are about delete this item!' } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table><hr><br>
+  </center>
+
+
+  <div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <button type="button" class="btn btn-success btn-lg btn-block">Delivery Details</button><br>
+      <% @exrec.exdlvs.each do |delv| %>
+        Delivert Fee: <%= number_to_currency delv.delivery %><br>
+        Fee: <%= number_to_currency delv.fee %><br>
+        Discount: <%= number_to_currency delv.discount %>&nbsp;&nbsp;&nbsp;&nbsp;
+        <td><%= link_to (image_tag('delx.png',  height: '40px', width: '40px')), [@exrec, delv], method: :delete, data: { confirm: 'You are about delete this item!' } %></td>
+        <hr>
+      <% end %>
+    </div>
+    <div class="col-sm">
+      <font size="4" color="red"><%= number_to_currency exsub_totls %> Items Subtotal</font><br>
+      <% if @exrec.tax_inc == true %>
+        <font size="4" color="red"><%= number_to_currency extax_calc %> Invoice TAX</font><br>
+      <% end %>
+      <font size="4" color="red"><%= number_to_currency exinv_delivery %> Delivery Fee</font><br>
+      <font size="4" color="red"><%= number_to_currency exinv_fee   %> Fee If Apply  -</font><br>
+      <font size="4" color="blue"><%= number_to_currency exinv_dicount  %> Discount If Apply</font><br>
+      <hr>
+      <% if @exrec.tax_inc == true %>
+        <font size="5" color="red"><%= number_to_currency extotall_tax  %> Invoice Cost</font><br>
+      <% else %>
+        <font size="5" color="red"><%= number_to_currency extotall  %> Invoice Cost</font><br>
+      <% end %>
+      <hr>
+    </div>
+  </div>
+  </div><br>
+
+
+<a href="#" id="show_exitems">
+  <button type="button" class="btn btn-info btn-lg btn-block"><h3>1- Click to Add Items Details!</h3></button><br>
+</a>
+<div id="exitems" class="hidden">
+  <div class="container" style= 'background-color: #F0FFFF'>
+    <%= form_for [@exrec, @exrec.exgoods.build] do |f| %>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            <%= f.label :qny %><br>
+            <%= f.select :qny, [0,1,2,3,4,5,6,7,8,9,10,11,12] %>
+          </div>
+          <div class="col-sm">
+          <%= f.label :item %><br>
+            <%= f.text_field :item %>
+          </div>
+          <div class="col-sm">
+            <%= f.label :description %>
+            <%= f.text_field :description %>
+          </div>
+          <div class="col-sm">
+            <%= f.label :price %><br>
+            <%= f.text_field :price %>
+          </div>
+        </div>
+          <div class="col-sm"><br>
+            <div class="actions">
+              <button class="btn btn-success btn-lg btn-block " type="submit"><h3> Click here to ADD New Item!</h3></button>
+            </div><br>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div><br>
+
+
+  <a href="#" id="show_dlv">
+    <button type="button" class="btn btn-info btn-lg btn-block"><h3>2- Click to Add Delivery Details!</h3></button>
+  </a><br>
+  <div id="dlv" class="hidden">
+    <div class="container" style= 'background-color: #F0FFFF'><br>
+      <%= form_for [@exrec, @exrec.exdlvs.build] do |f| %>
+        <div class="row">
+          <div class="col">
+            <div class="col-sm">
+              Delivery Fee: <%= f.text_field :delivery %>
+            </div>
+          </div>
+          <div class="col">
+            <div class="col-sm">
+              Fee If Apply: <%= f.text_field :fee%>
+            </div>
+          </div>
+          <div class="col">
+            <div class="col-sm">
+              Discoint If Apply: <%= f.text_field :discount %>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm"><br>
+          <div class="actions">
+            <button class="btn btn-success btn-lg btn-block " type="submit"><h3>Click here to ADD Delivery  Details and Discount if Apply!</h3></button>
+          </div><br>
+        </div>
+      <% end %>
+    </div><br>
+  </div><br><br>
